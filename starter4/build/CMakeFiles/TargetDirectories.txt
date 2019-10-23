@@ -1,0 +1,6 @@
+/Users/linh/downloads/assn4/starter4/build/CMakeFiles/rebuild_cache.dir
+/Users/linh/downloads/assn4/starter4/build/CMakeFiles/edit_cache.dir
+/Users/linh/downloads/assn4/starter4/build/CMakeFiles/a4.dir
+/Users/linh/downloads/assn4/starter4/build/vecmath/CMakeFiles/rebuild_cache.dir
+/Users/linh/downloads/assn4/starter4/build/vecmath/CMakeFiles/edit_cache.dir
+/Users/linh/downloads/assn4/starter4/build/vecmath/CMakeFiles/vecmath.dir

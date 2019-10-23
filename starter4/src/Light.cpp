@@ -20,5 +20,9 @@
     {
         // TODO Implement point light source
         // tolight, intensity, distToLight are outputs
+
+        tolight = (_position - p).normalized();
+        intensity = _color / (_falloff * _falloff);
+        distToLight = (_position - p).abs();
     }
 
