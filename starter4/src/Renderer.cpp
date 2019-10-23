@@ -75,6 +75,17 @@ Renderer::traceRay(const Ray &r,
 {
     // The starter code only implements basic drawing of sphere primitives.
     // You will implement phong shading, recursive ray tracing, and shadow rays.
+    Vector3f ambientTerm = _scene.getAmbientLight() * h.getMaterial()->getDiffuseColor(); 
+    Vector3f dirToLight; 
+    Vector3f intensity;
+    Vector3f distToLight;
+    // getIllumination(const Vector3f &p, 
+                                //  Vector3f &tolight, 
+                                //  Vector3f &intensity, 
+                                //  float &distToLight)
+    _scene.getLight().getIllumination(, dirToLight, intensity, distToLight);
+
+    totalIntensity = ambientTerm + h.getMaterial().shade(r, h, dirToLight, lightIntensity)
 
     // TODO: IMPLEMENT 
     if (_scene.getGroup()->intersect(r, tmin, h)) {
