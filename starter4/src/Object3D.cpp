@@ -1,4 +1,5 @@
 #include "Object3D.h"
+using namespace std;
 
 bool Sphere::intersect(const Ray &r, float tmin, Hit &h) const
 {
@@ -78,12 +79,24 @@ bool Group::intersect(const Ray &r, float tmin, Hit &h) const
 }
 
 
-Plane::Plane(const Vector3f &normal, float d, Material *m) : Object3D(m) {
-    // TODO implement Plane constructor
+Plane::Plane(const Vector3f &normal, float d, Material *m) : 
+      _normal(normal),
+      _d (d),
+      Object3D(m)  {
 }
 bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
 {
     // TODO implement
+    const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
+    const Vector3f &dir = r.getDirection();
+    
+
+    float t = - (_d + Vector3f::dot(_normal, rayOrigin)) / (Vector3f::dot(_normal, dir));
+
+    if (t < h.getT() && t > tmin) {
+        h.set(t, this->material, _normal);
+        return true;
+    }
     return false;
 }
 bool Triangle::intersect(const Ray &r, float tmin, Hit &h) const 

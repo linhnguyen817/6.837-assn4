@@ -7,6 +7,9 @@
 #include "VecUtils.h"
 
 #include <limits>
+#include <iostream>
+
+using namespace std;
 
 
 Renderer::Renderer(const ArgParser &args) :
@@ -75,23 +78,31 @@ Renderer::traceRay(const Ray &r,
 {
     // The starter code only implements basic drawing of sphere primitives.
     // You will implement phong shading, recursive ray tracing, and shadow rays.
-    Vector3f ambientTerm = _scene.getAmbientLight() * h.getMaterial()->getDiffuseColor(); 
-    Vector3f dirToLight; 
-    Vector3f intensity;
-    Vector3f distToLight;
-    // getIllumination(const Vector3f &p, 
-                                //  Vector3f &tolight, 
-                                //  Vector3f &intensity, 
-                                //  float &distToLight)
-    _scene.getLight().getIllumination(, dirToLight, intensity, distToLight);
-
-    totalIntensity = ambientTerm + h.getMaterial().shade(r, h, dirToLight, lightIntensity)
 
     // TODO: IMPLEMENT 
     if (_scene.getGroup()->intersect(r, tmin, h)) {
-        return h.getMaterial()->getDiffuseColor();
-    } else {
-        return Vector3f(0, 0, 0);
+        cout << "ENTERED intersected" << endl; 
+        Vector3f dirToLight; 
+        Vector3f intensity;
+        float distToLight;
+        Vector3f totalDiffuseAndSpecular;
+
+        // sum diffuse and specular term for all lights
+        for (int i = 0; i < _scene.getNumLights(); i++) {
+            _scene.getLight(i)->getIllumination(r.getOrigin(), dirToLight, intensity, distToLight);
+            totalDiffuseAndSpecular += h.getMaterial()->shade(r, h, dirToLight, intensity);
+        }
+        
+        Vector3f ambientTerm = _scene.getAmbientLight() * h.getMaterial()->getDiffuseColor(); 
+
+        Vector3f totalIntensity = ambientTerm + totalDiffuseAndSpecular;
+        cout << "TOTAL INTENSITY: " << totalIntensity.x() << ", " << totalIntensity.y() << ", " << totalIntensity.z() << endl;
+
+        return totalIntensity;
+    } 
+    else {
+        cout << "ENTERED didn't intersect" << endl;
+        return _scene.getBackgroundColor(r.getDirection());
     };
 }
 

@@ -3,6 +3,8 @@
         "chrono": "cpp",
         "complex": "cpp",
         "algorithm": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "vector": "cpp",
+        "iostream": "cpp"
     }
 }

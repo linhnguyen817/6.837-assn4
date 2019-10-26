@@ -85,9 +85,9 @@ public:
     virtual bool intersect(const Ray &r, float tmin, Hit &h) const override;
 
 private:
-    // TOOD fill in members
+    Vector3f _normal;
+    float _d;
 };
-
 
 // TODO: implement this class.
 // Add more fields as necessary, but do not remove getVertex and getNormal
