@@ -15,7 +15,7 @@ Vector3f Material::shade(const Ray &ray,
     Vector3f diffuseTerm = clampedLN * lightIntensity * _diffuseColor;
 
 
-    // implement specular Phong shading
+    // implement specular Phong shading, from lecture 11, pg 14
     Vector3f reflectedEyeRay = - ray.getDirection() + 2 * normal * (Vector3f::dot(ray.getDirection(), normal));
     float clampedLR = Vector3f::dot(dirToLight, reflectedEyeRay);
     if (clampedLR <= 0)
