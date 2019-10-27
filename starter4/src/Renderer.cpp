@@ -81,7 +81,7 @@ Renderer::traceRay(const Ray &r,
 
     // TODO: IMPLEMENT 
     if (_scene.getGroup()->intersect(r, tmin, h)) {
-        Vector3f totalDiffuseAndSpecular;
+        Vector3f totalDiffuseAndSpecular = Vector3f(0, 0, 0);
 
         // sum diffuse and specular term for all lights
         for (int i = 0; i < _scene.getNumLights(); i++) {
@@ -92,8 +92,10 @@ Renderer::traceRay(const Ray &r,
             totalDiffuseAndSpecular += h.getMaterial()->shade(r, h, dirToLight, intensity);
         }
         
+        // get ambient light
         Vector3f ambientTerm = _scene.getAmbientLight() * h.getMaterial()->getDiffuseColor(); 
 
+        // sum to find total illumination intensity
         Vector3f totalIntensity = ambientTerm + totalDiffuseAndSpecular;
 
 

@@ -1,4 +1,4 @@
-# Install script for directory: /Users/linh/downloads/assn4/starter4/vecmath
+# Install script for directory: /Users/vynguyen/Desktop/6.837-assn4/starter4/vecmath
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
