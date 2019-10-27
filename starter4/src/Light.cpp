@@ -22,7 +22,9 @@
         // tolight, intensity, distToLight are outputs
 
         tolight = (_position - p).normalized();
-        intensity = _color / (_falloff * _falloff);
         distToLight = (_position - p).abs();
+        intensity = _color / (_falloff * distToLight * distToLight);
+        // intensity = _color / (_falloff * _falloff);
+        
     }
 
