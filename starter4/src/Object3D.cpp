@@ -94,9 +94,6 @@ bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
     float t = - (_d + Vector3f::dot(_normal, rayOrigin)) / (Vector3f::dot(_normal, dir));
 
     if (t < h.getT() && t > tmin) {
-        // cout << "t: " << t << endl;
-        // cout << "tmin: " << tmin << endl;
-        // cout << "h.getT: " << h.getT() << endl;
         h.set(t, this->material, _normal);
         return true;
     }
