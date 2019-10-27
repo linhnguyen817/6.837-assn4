@@ -81,28 +81,28 @@ Renderer::traceRay(const Ray &r,
 
     // TODO: IMPLEMENT 
     if (_scene.getGroup()->intersect(r, tmin, h)) {
-        cout << "ENTERED intersected" << endl; 
-        Vector3f dirToLight; 
-        Vector3f intensity;
-        float distToLight;
         Vector3f totalDiffuseAndSpecular;
 
         // sum diffuse and specular term for all lights
         for (int i = 0; i < _scene.getNumLights(); i++) {
-            _scene.getLight(i)->getIllumination(r.getOrigin(), dirToLight, intensity, distToLight);
+            Vector3f dirToLight; 
+            Vector3f intensity;
+            float distToLight;
+            _scene.getLight(i)->getIllumination(r.pointAtParameter(h.getT()), dirToLight, intensity, distToLight);
             totalDiffuseAndSpecular += h.getMaterial()->shade(r, h, dirToLight, intensity);
         }
         
         Vector3f ambientTerm = _scene.getAmbientLight() * h.getMaterial()->getDiffuseColor(); 
 
         Vector3f totalIntensity = ambientTerm + totalDiffuseAndSpecular;
-        cout << "TOTAL INTENSITY: " << totalIntensity.x() << ", " << totalIntensity.y() << ", " << totalIntensity.z() << endl;
+
 
         return totalIntensity;
     } 
     else {
-        cout << "ENTERED didn't intersect" << endl;
+        // cout << "ENTERED didn't intersect" << endl;
+        // cout << _scene.getBackgroundColor(r.getDirection()).x() << ", " << _scene.getBackgroundColor(r.getDirection()).y() << ", " << _scene.getBackgroundColor(r.getDirection()).z() << endl;
         return _scene.getBackgroundColor(r.getDirection());
-    };
+    }
 }
 

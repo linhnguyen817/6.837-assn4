@@ -6,17 +6,18 @@ Vector3f Material::shade(const Ray &ray,
     const Vector3f &dirToLight,
     const Vector3f &lightIntensity)
 {
-
-    // implememnt diffuse shading
-    float clampedLN = Vector3f::dot(dirToLight, hit.getNormal());
-    if (clampedLN <= 0)
+    Vector3f normal = hit.getNormal();
+    // implement diffuse shading
+    float clampedLN = Vector3f::dot(dirToLight, normal);
+    if (clampedLN < 0)
         clampedLN = 0;
 
     Vector3f diffuseTerm = clampedLN * lightIntensity * _diffuseColor;
 
 
     // implement specular Phong shading
-    float clampedLR = Vector3f::dot(dirToLight, ray.getDirection());
+    Vector3f reflectedEyeRay = - ray.getDirection() + 2 * normal * (Vector3f::dot(ray.getDirection(), normal));
+    float clampedLR = Vector3f::dot(dirToLight, reflectedEyeRay);
     if (clampedLR <= 0)
         clampedLR = 0;
 
