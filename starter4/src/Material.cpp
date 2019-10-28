@@ -16,7 +16,8 @@ Vector3f Material::shade(const Ray &ray,
 
 
     // implement specular Phong shading, from lecture 11, pg 14
-    Vector3f reflectedEyeRay = - ray.getDirection() + 2 * normal * (Vector3f::dot(ray.getDirection(), normal));
+    // changed sign of the ray direction in the dot product fixed the specular
+    Vector3f reflectedEyeRay = ray.getDirection() + 2 * normal * (Vector3f::dot(- ray.getDirection(), normal));
     float clampedLR = Vector3f::dot(dirToLight, reflectedEyeRay);
     if (clampedLR <= 0)
         clampedLR = 0;
