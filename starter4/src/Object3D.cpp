@@ -86,12 +86,12 @@ Plane::Plane(const Vector3f &normal, float d, Material *m) :
 }
 bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
 {
-    // TODO implement
     const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
     const Vector3f &dir = r.getDirection();
     
     // find intersection time
-    float t = - (_d + Vector3f::dot(_normal, rayOrigin)) / (Vector3f::dot(_normal, dir));
+    // removed sign in front fixed background problem in scene01
+    float t = (_d + Vector3f::dot(_normal, rayOrigin)) / (Vector3f::dot(_normal, dir));
 
     if (t < h.getT() && t > tmin) {
         h.set(t, this->material, _normal);
@@ -101,7 +101,29 @@ bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
 }
 bool Triangle::intersect(const Ray &r, float tmin, Hit &h) const 
 {
-    // TODO implement
+    // const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
+    // const Vector3f &dir = r.getDirection();
+
+    // // Get triangle vertices
+    // Vector3f vertex_a = getVertex(0);
+    // Vector3f vertex_b = getVertex(1);
+    // Vector3f vertex_c = getVertex(2);
+
+    // // Construct matrix A and vector b
+    // Matrix3f A;
+    // Vector3f b;
+
+    // for(int i = 0; i < 3; i++){
+    //     const Vector3f &A_row = (vertex_a[i] - vertex_b[i], vertex_a[i] - vertex_c[i], dir[i]);
+    //     A.setRow(i, A_row);
+    //     b[i] = vector_a[i] - rayOrigin[i];
+    // }
+
+    // // Solve for x = [beta, gamma, t]
+    // Vector3f x = A.inverse() * b;
+
+
+
     return false;
 }
 

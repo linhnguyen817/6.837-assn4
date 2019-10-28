@@ -56,12 +56,6 @@ vector
 vecmath.h
 /Users/vynguyen/Desktop/6.837-assn4/starter4/src/vecmath.h
 
-/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Material.cpp
-Material.h
-/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Material.h
-cmath
--
-
 /Users/vynguyen/Desktop/6.837-assn4/starter4/src/Material.h
 cassert
 -
@@ -73,6 +67,18 @@ Image.h
 /Users/vynguyen/Desktop/6.837-assn4/starter4/src/Image.h
 Vector3f.h
 /Users/vynguyen/Desktop/6.837-assn4/starter4/src/Vector3f.h
+string
+-
+
+/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Object3D.cpp
+Object3D.h
+/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Object3D.h
+
+/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Object3D.h
+Ray.h
+/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Ray.h
+Material.h
+/Users/vynguyen/Desktop/6.837-assn4/starter4/src/Material.h
 string
 -
 
