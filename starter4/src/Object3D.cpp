@@ -1,6 +1,9 @@
 #include "Object3D.h"
 using namespace std;
 
+/********************************
+ * Sphere bounded volume
+ ********************************/
 bool Sphere::intersect(const Ray &r, float tmin, Hit &h) const
 {
     // BEGIN STARTER
@@ -78,7 +81,9 @@ bool Group::intersect(const Ray &r, float tmin, Hit &h) const
     // END STARTER
 }
 
-
+/********************************
+ * Plane bounded volume
+ ********************************/
 Plane::Plane(const Vector3f &normal, float d, Material *m) : 
       _normal(normal),
       _d (d),
@@ -90,7 +95,7 @@ bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
     const Vector3f &dir = r.getDirection();
     
     // find intersection time
-    // removed sign in front fixed background problem in scene01
+    // removed negative sign in front fixed background problem in scene01
     float t = (_d + Vector3f::dot(_normal, rayOrigin)) / (Vector3f::dot(_normal, dir));
 
     if (t < h.getT() && t > tmin) {
@@ -99,41 +104,93 @@ bool Plane::intersect(const Ray &r, float tmin, Hit &h) const
     }
     return false;
 }
+/********************************
+ * Triangle bounded volume
+ ********************************/
 bool Triangle::intersect(const Ray &r, float tmin, Hit &h) const 
 {
-    // const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
-    // const Vector3f &dir = r.getDirection();
+    // See lecture 10, page 16 - 19
+    // Get ray origin and direction
+    const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
+    const Vector3f &dir = r.getDirection();
 
-    // // Get triangle vertices
-    // Vector3f vertex_a = getVertex(0);
-    // Vector3f vertex_b = getVertex(1);
-    // Vector3f vertex_c = getVertex(2);
+    // Get triangle vertices
+    Vector3f vertex_a = getVertex(0);
+    Vector3f vertex_b = getVertex(1);
+    Vector3f vertex_c = getVertex(2);
 
-    // // Construct matrix A and vector b
-    // Matrix3f A;
-    // Vector3f b;
+    // Construct matrix A and vector b
+    /*
+     * A = | ax-bx  ax-cx  dir_x |     b = | ax-orig_x |
+     *     | ay-by  ay-cy  dir_y |         | ay-orig_y |
+     *     | az-bz  az-cz  dir_z |         | az-orig_z |
+     */
+    Matrix3f A;
+    Vector3f b;
+    for (int i = 0; i < 3; i++){
+        const Vector3f &A_row = Vector3f(vertex_a[i] - vertex_b[i], vertex_a[i] - vertex_c[i], dir[i]);
+        A.setRow(i, A_row);
+        b[i] = vertex_a[i] - rayOrigin[i];
+    }
 
-    // for(int i = 0; i < 3; i++){
-    //     const Vector3f &A_row = (vertex_a[i] - vertex_b[i], vertex_a[i] - vertex_c[i], dir[i]);
-    //     A.setRow(i, A_row);
-    //     b[i] = vector_a[i] - rayOrigin[i];
-    // }
+    // Solve for x = [beta, gamma, t]
+    Vector3f x = A.inverse() * b;
+    float alpha = 1 - x[0] - x[1];
 
-    // // Solve for x = [beta, gamma, t]
-    // Vector3f x = A.inverse() * b;
+    // Check that the intersection is inside the triangle
+    if (alpha < 0 || x[0] < 0 || x[1] < 0){
+        return false;
+    }
 
-
+    // Interpolate the normal : (alpha * n1, beta * n2, gamma * n3)
+    if (x[2] < h.getT() && x[2] > tmin) {
+        Vector3f normal = (alpha * getNormal(0), x[0] * getNormal(1), x[1] * getNormal(2));
+        h.set(x[2], this->material, normal);
+        return true;
+    }
 
     return false;
 }
 
+/******************************
+ * Incorporate transforms
+ ******************************/
 
+/******************
+ * Constructor
+ ******************/
 Transform::Transform(const Matrix4f &m,
     Object3D *obj) : _object(obj) {
-    // TODO implement Transform constructor
+    _M = m;
 }
+
+/************************
+ * Implement transform
+ ************************/
 bool Transform::intersect(const Ray &r, float tmin, Hit &h) const
 {
-    // TODO implement
+    // Get ray origin and direction
+    const Vector3f &rayOrigin = r.getOrigin(); //Ray origin in the world coordinate
+    const Vector3f &dir = r.getDirection();
+
+    // Transform ray origin and direction (Lecture 10 page 53)
+    const Vector4f &rayOrigin_homog = Vector4f(rayOrigin, 1.0);
+    const Vector4f &dir_homog = Vector4f(dir, 0.0);
+    const Vector4f &newRayOrigin = _M.inverse() * rayOrigin_homog;
+    const Vector4f &newDir = _M.inverse() * dir_homog;
+
+    // Form new ray
+    Ray new_ray = Ray(newRayOrigin.xyz(), newDir.xyz());
+
+    // If a new hit is found, transform normal (lecture 10, page 57) and update hit
+    if(_object -> intersect(new_ray, tmin, h)){
+        Vector4f normal = Vector4f(h.getNormal(), 0.0);
+        Vector4f newNormal = _M.inverse().transposed() * normal;
+        float t = h.getT();
+        Material *material = h.getMaterial();
+        h.set(t, material, normal.xyz());
+        return true;
+    }
+
     return false;
 }
